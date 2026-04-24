@@ -1,4 +1,9 @@
-# SneakerHead Product Service - Dummy Test
+# SneakerHead Product Service - Health Check Test
+import os
+
+# Set required env vars before importing app
+os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://test:test@localhost:5432/testdb")
+
 from fastapi.testclient import TestClient
 from app.main import app
 
@@ -9,5 +14,7 @@ def test_health_check():
     """Verify the product-service health endpoint returns 200."""
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json()["status"] == "ok"
-    assert response.json()["service"] == "product-service"
+    data = response.json()
+    assert data["status"] == "ok"
+    assert data["service"] == "product-service"
+    assert "version" in data
